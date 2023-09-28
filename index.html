@@ -23,6 +23,8 @@
 
     <button name="send">Result</button>
 
+    <input name="result" readonly />
+
 
     <script type="text/javascript">
         const buttonElement = document.querySelector('button[name="send"]');
@@ -31,8 +33,11 @@
             const xElement = document.querySelector('input[name="x"]');
             const yElement = document.querySelector('input[name="y"]');
             const actionElement = document.querySelector('input[name="action"]');
+            const resultElement = document.querySelector('input[name="result"]');
 
-            console.log(xElement.value, yElement.value);
+            console.log(xElement.value, yElement.value, actionElement.value, resultElement.value);
+
+            resultElement.value = parseInt(xElement, 10) + parseInt(yElement, 10);
         });
     </script>
 </body>
