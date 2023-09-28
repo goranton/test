@@ -8,6 +8,32 @@
     <title>Document</title>
 </head>
 <body>
-  <h1>Test</h1>
+    <h1>Quiz 1</h1>
+
+    <input type="text" name="x" placeholder="x" />
+
+    <select name="action">
+        <option value="+">+</option>
+        <option value="-">-</option>
+        <option value="+">/</option>
+        <option value="+">*</option>
+    </select>
+
+    <input type="text" name="y" placeholder="y" />
+
+    <button name="send">Result</button>
+
+
+    <script type="text/javascript">
+        const buttonElement = document.querySelector('button[name="send"]');
+
+        buttonElement.addEventListener('click', () => {
+            const xElement = document.querySelector('input[name="x"]');
+            const yElement = document.querySelector('input[name="y"]');
+            const actionElement = document.querySelector('input[name="action"]');
+
+            console.log(xElement.value, yElement.value);
+        });
+    </script>
 </body>
 </html>
