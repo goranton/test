@@ -101,6 +101,55 @@
     const productsPlacement = document.querySelector('#products');
     const basketPlacement = document.querySelector('#basket');
 
+    function renderBasket() {
+        const groupById = basket.reduce((result, item) => {
+            if (result[item.id] === undefined) {
+                result[item.id] = item;
+                result[item.id].count = 1;
+            } else {
+                result[item.id].count++;
+            }
+
+            return result;
+        }, {});
+
+        Object.values(groupById).forEach((product) => {
+            const productElement = document.createElement('div');
+
+            productElement.dataset.id = product.id;
+            productElement.classList.add('product');
+
+            const productHead  = document.createElement('div');
+
+            productHead.classList.add('product__head');
+            productHead.innerHTML = product.name;
+
+
+            const productCount = document.createElement('div');
+
+            productCount.classList.add('product__count');
+            productCount.innerHTML = `${product.count}`;
+
+            const productButton = document.createElement('button');
+
+            productButton.innerHTML = 'Удалить из корзины';
+
+            productButton.addEventListener('click', () => {
+                const index = basket.findIndex((item) => item.id === product.id);
+
+                if (index > -1) {
+                    basket.splice(index, 1);
+                }
+            }, {once: true})
+
+            productElement.appendChild(productHead);
+            productElement.appendChild(productCount);
+            productElement.appendChild(productButton);
+
+            basketPlacement.appendChild(productElement);
+        });
+    }
+
     function render() {
         productsPlacement.innerHTML = '';
 
@@ -137,6 +186,7 @@
                 basket.push(product);
 
                 render();
+                renderBasket();
             }, {once: true});
 
             productElement.appendChild(productHead);
