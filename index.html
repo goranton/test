@@ -41,6 +41,28 @@
 <div id="products"></div>
 <div id="basket"></div>
 
+<style>
+    #products {
+        display: flex;
+    }
+
+    .product {
+        min-width: 300px;
+        background: silver;
+        margin: 10px;
+        padding: 20px;
+    }
+
+    .product__head:before {
+        content: 'Название: ';
+        font-size: 15px;
+    }
+
+    .product__count:before {
+        content: 'Кол-во: ';
+    }
+</style>
+
 
 <script type="text/javascript">
     const buttonElement = document.querySelector('button[name="send"]');
@@ -99,6 +121,8 @@
             productCount.innerHTML = product.count;
 
             const productButton = document.createElement('button');
+
+            productButton.innerHTML = 'Добавить в корзину';
 
             productButton.addEventListener('click', () => {
                 basket.push(product);
