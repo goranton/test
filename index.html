@@ -8,37 +8,113 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Quiz 1</h1>
+<h1>Quiz 1</h1>
 
-    <input type="text" name="x" placeholder="x" />
+<input type="text" name="x" placeholder="x" />
 
-    <select name="action">
-        <option value="+">+</option>
-        <option value="-">-</option>
-        <option value="+">/</option>
-        <option value="+">*</option>
-    </select>
+<select name="action">
+    <option value="+">+</option>
+    <option value="-">-</option>
+    <option value="+">/</option>
+    <option value="+">*</option>
+</select>
 
-    <input type="text" name="y" placeholder="y" />
+<input type="text" name="y" placeholder="y" />
 
-    <button name="send">Result</button>
+<button name="send">Result</button>
 
-    <input name="result" readonly />
+<input name="result" readonly />
 
 
-    <script type="text/javascript">
-        const buttonElement = document.querySelector('button[name="send"]');
+<h1>Quiz 2</h1>
 
-        buttonElement.addEventListener('click', () => {
-            const xElement = document.querySelector('input[name="x"]');
-            const yElement = document.querySelector('input[name="y"]');
-            const actionElement = document.querySelector('input[name="action"]');
-            const resultElement = document.querySelector('input[name="result"]');
+<p>
+    ТЗ: Необходимо реализовать функционал добавление товара в корзину
 
-            console.log(xElement.value, yElement.value, actionElement.value, resultElement.value);
+    Корзина должна состоять из
 
-            resultElement.value = parseInt(xElement, 10) + parseInt(yElement, 10);
+    1) Товар с указанием выбранного кол-ва
+    2) Товар можно удалять из корзины
+    3) Нельзя добавить в корзину больше максимального кол-ва товара на складе
+</p>
+
+<div id="products"></div>
+<div id="basket"></div>
+
+
+<script type="text/javascript">
+    const buttonElement = document.querySelector('button[name="send"]');
+
+    buttonElement.addEventListener('click', () => {
+        const xElement = document.querySelector('input[name="x"]');
+        const yElement = document.querySelector('input[name="y"]');
+        const actionElement = document.querySelector('input[name="action"]');
+        const resultElement = document.querySelector('input[name="result"]');
+
+        console.log(xElement.value, yElement.value, actionElement.value, resultElement.value);
+
+        resultElement.value = parseInt(xElement, 10) + parseInt(yElement, 10);
+    });
+
+    const products = [
+        {
+            id: 1,
+            name: 'Коробка',
+            count: 12,
+        },
+        {
+            id: 2,
+            name: 'Свеча',
+            count: 10,
+        },
+        {
+            id: 3,
+            name: 'Ведро',
+            count: 5,
+        }
+    ];
+
+    const basket = [];
+
+    const productsPlacement = document.querySelector('#products');
+    const basketPlacement = document.querySelector('#basket');
+
+    function render() {
+        products.forEach((product) => {
+            const productElement = document.createElement('div');
+
+            productElement.dataset.id = product.id;
+            productElement.classList.add('product');
+
+            const productHead  = document.createElement('div');
+
+            productHead.classList.add('product__head');
+            productHead.innerHTML = product.name;
+
+            const productCount = document.createElement('div');
+
+            productCount.classList.add('product__count');
+            productCount.innerHTML = product.count;
+
+            const productButton = document.createElement('button');
+
+            productButton.addEventListener('click', () => {
+                basket.push(product);
+
+                render();
+            }, {once: true});
+
+            productsPlacement.innerHTML = '';
+
+            productElement.appendChild(productHead);
+            productElement.appendChild(productCount);
+
+            productsPlacement.appendChild(productElement);
         });
-    </script>
+    }
+
+    render();
+
+</script>
 </body>
 </html>
