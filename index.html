@@ -80,6 +80,8 @@
     const basketPlacement = document.querySelector('#basket');
 
     function render() {
+        productsPlacement.innerHTML = '';
+
         products.forEach((product) => {
             const productElement = document.createElement('div');
 
@@ -103,8 +105,6 @@
 
                 render();
             }, {once: true});
-
-            productsPlacement.innerHTML = '';
 
             productElement.appendChild(productHead);
             productElement.appendChild(productCount);
