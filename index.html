@@ -102,6 +102,8 @@
     const basketPlacement = document.querySelector('#basket');
 
     function renderBasket() {
+        basketPlacement.innerHTML = '';
+
         const groupById = basket.reduce((result, item) => {
             if (result[item.id] === undefined) {
                 result[item.id] = item;
@@ -140,6 +142,8 @@
                 if (index > -1) {
                     basket.splice(index, 1);
                 }
+
+                renderBasket();
             }, {once: true})
 
             productElement.appendChild(productHead);
