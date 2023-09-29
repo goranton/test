@@ -105,6 +105,15 @@
         productsPlacement.innerHTML = '';
 
         products.forEach((product) => {
+            /** @type {number} */
+            const countInBasket = basket.reduce((acc, item) => {
+                if (item.id === product.id) {
+                    acc++;
+                }
+
+                return acc;
+            }, 0);
+
             const productElement = document.createElement('div');
 
             productElement.dataset.id = product.id;
@@ -118,7 +127,7 @@
             const productCount = document.createElement('div');
 
             productCount.classList.add('product__count');
-            productCount.innerHTML = product.count;
+            productCount.innerHTML = `${product.count - countInBasket}`;
 
             const productButton = document.createElement('button');
 
