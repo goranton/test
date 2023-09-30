@@ -63,13 +63,23 @@
         }
     ];
 
-    const basket = [];
+    const getBasket = () => {
+        try {
+            JSON.parse(localStorage.getItem('basket'));
+        } catch {
+            return [];
+        }
+    };
+
+    const basket = getBasket();
 
     const productsPlacement = document.querySelector('#products');
     const basketPlacement = document.querySelector('#basket');
 
     function renderBasket() {
         basketPlacement.innerHTML = '';
+
+        localStorage.setItem('basket', JSON.stringify(basket));
 
         const groupById = basket.reduce((result, item) => {
             if (result[item.id] === undefined) {
@@ -111,6 +121,7 @@
                 }
 
                 renderBasket();
+                render();
             }, {once: true})
 
             productElement.appendChild(productHead);
@@ -149,20 +160,29 @@
             productCount.classList.add('product__count');
             productCount.innerHTML = `${product.count - countInBasket}`;
 
-            const productButton = document.createElement('button');
-
-            productButton.innerHTML = 'Добавить в корзину';
-
-            productButton.addEventListener('click', () => {
-                basket.push({...product});
-
-                render();
-                renderBasket();
-            }, {once: true});
-
             productElement.appendChild(productHead);
             productElement.appendChild(productCount);
-            productElement.appendChild(productButton);
+
+            if(product.count - countInBasket > 0) {
+                const productButton = document.createElement('button');
+
+                productButton.innerHTML = 'Добавить в корзину';
+
+                productButton.addEventListener('click', () => {
+                    basket.push({...product});
+
+                    render();
+                    renderBasket();
+                }, {once: true});
+
+                productElement.appendChild(productButton);
+            } else {
+                const productText = document.createElement('div');
+
+                productText.innerHTML = 'Товар закончился';
+
+                productElement.appendChild(productText);
+            }
 
             productsPlacement.appendChild(productElement);
         });
