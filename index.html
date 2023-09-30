@@ -65,7 +65,7 @@
 
     const getBasket = () => {
         try {
-            JSON.parse(localStorage.getItem('basket'));
+            return JSON.parse(localStorage.getItem('basket')) ?? [];
         } catch {
             return [];
         }
