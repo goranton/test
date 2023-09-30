@@ -172,11 +172,14 @@
                 productInput.setAttribute('type', 'number');
                 productInput.setAttribute('max', product.count - countInBasket);
                 productInput.setAttribute('min', 1);
+                productInput.classList.add('count');
 
                 productInput.value = 1;
 
                 productButton.addEventListener('click', () => {
-                    const items = new Array({length: parseInt(productInput.value, 10)}).fill(null).map(() => ({...product}));
+                    const countInput = parseInt(productElement.querySelector('.count').value, 10);
+
+                    const items = new Array({length: countInput}).fill(undefined).map(() => ({...product}));
 
                     items.forEach((item) => {
                         basket.push(item);
