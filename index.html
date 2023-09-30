@@ -71,7 +71,7 @@
         }
     };
 
-    const basket = getBasket();
+    let basket = getBasket();
 
     const productsPlacement = document.querySelector('#products');
     const basketPlacement = document.querySelector('#basket');
@@ -111,14 +111,32 @@
 
             const productButton = document.createElement('button');
 
+            const productCountInput = document.createElement('input');
+
+            productCountInput.setAttribute('type', 'number');
+            productCountInput.setAttribute('max', product.count);
+            productCountInput.setAttribute('min', 1);
+            productCountInput.classList.add('count');
+
+            productCountInput.value = 1;
+
             productButton.innerHTML = 'Удалить из корзины';
 
             productButton.addEventListener('click', () => {
-                const index = basket.findIndex((item) => item.id === product.id);
-
-                if (index > -1) {
-                    basket.splice(index, 1);
-                }
+                const countInput = parseInt(productElement.querySelector('.count').value, 10);
+                let count = 0;
+                
+                basket = basket.filter((item) => {
+                    if (count > countInput) {
+                        return true;
+                    }
+                    
+                    const result =  item.id === product.id;
+                    
+                    count++;
+                    
+                    return result;
+                });
 
                 renderBasket();
                 render();
@@ -126,6 +144,7 @@
 
             productElement.appendChild(productHead);
             productElement.appendChild(productCount);
+            productElement.appendChild(productCountInput);
             productElement.appendChild(productButton);
 
             basketPlacement.appendChild(productElement);
