@@ -125,16 +125,16 @@
             productButton.addEventListener('click', () => {
                 const countInput = parseInt(productElement.querySelector('.count').value, 10);
                 let count = 0;
-                
+
                 basket = basket.filter((item) => {
                     if (count > countInput) {
                         return true;
                     }
-                    
-                    const result =  item.id === product.id;
-                    
+
+                    const result =  item.id !== product.id;
+
                     count++;
-                    
+
                     return result;
                 });
 
