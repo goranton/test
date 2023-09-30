@@ -164,17 +164,29 @@
             productElement.appendChild(productCount);
 
             if(product.count - countInBasket > 0) {
+                const productInput = document.createElement('input');
                 const productButton = document.createElement('button');
 
                 productButton.innerHTML = 'Добавить в корзину';
 
+                productInput.setAttribute('type', 'number');
+                productInput.setAttribute('max', product.count - countInBasket);
+                productInput.setAttribute('min', 1);
+
+                productInput.value = 1;
+
                 productButton.addEventListener('click', () => {
-                    basket.push({...product});
+                    const items = new Array({length: parseInt(productInput.value, 10)}).fill(null).map(() => ({...product}));
+
+                    items.forEach((item) => {
+                        basket.push(item);
+                    });
 
                     render();
                     renderBasket();
                 }, {once: true});
 
+                productElement.appendChild(productInput);
                 productElement.appendChild(productButton);
             } else {
                 const productText = document.createElement('div');
