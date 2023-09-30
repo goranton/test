@@ -179,7 +179,7 @@
                 productButton.addEventListener('click', () => {
                     const countInput = parseInt(productElement.querySelector('.count').value, 10);
 
-                    const items = new Array({length: countInput}).fill(undefined).map(() => ({...product}));
+                    const items = Array.from({length: countInput}).map(() => ({...product}));
 
                     items.forEach((item) => {
                         basket.push(item);
