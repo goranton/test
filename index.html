@@ -8,23 +8,6 @@
     <title>Document</title>
 </head>
 <body>
-<h1>Quiz 1</h1>
-
-<input type="text" name="x" placeholder="x" />
-
-<select name="action">
-    <option value="+">+</option>
-    <option value="-">-</option>
-    <option value="+">/</option>
-    <option value="+">*</option>
-</select>
-
-<input type="text" name="y" placeholder="y" />
-
-<button name="send">Result</button>
-
-<input name="result" readonly />
-
 
 <h1>Quiz 2</h1>
 
@@ -62,19 +45,6 @@
 
 
 <script type="text/javascript">
-    const buttonElement = document.querySelector('button[name="send"]');
-
-    buttonElement.addEventListener('click', () => {
-        const xElement = document.querySelector('input[name="x"]');
-        const yElement = document.querySelector('input[name="y"]');
-        const actionElement = document.querySelector('input[name="action"]');
-        const resultElement = document.querySelector('input[name="result"]');
-
-        console.log(xElement.value, yElement.value, actionElement.value, resultElement.value);
-
-        resultElement.value = parseInt(xElement, 10) + parseInt(yElement, 10);
-    });
-
     const products = [
         {
             id: 1,
@@ -184,7 +154,7 @@
             productButton.innerHTML = 'Добавить в корзину';
 
             productButton.addEventListener('click', () => {
-                basket.push(product);
+                basket.push({...product});
 
                 render();
                 renderBasket();
