@@ -94,7 +94,11 @@
             const render = async () => {
                 playground.innerHTML = '';
 
-                await api.call();
+                const items = await api.call();
+
+                items.forEach((item) => {
+                    playground.appendChild(generateCard(item));
+                })
             };
 
             render();
