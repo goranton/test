@@ -48,7 +48,7 @@
                 let count, pages, nextUrl, prevUrl = undefined;
 
                 const call = async () => {
-                    const response = await fetch(url);
+                    const response = await fetch(current);
 
                     const {info, results} = await response.json();
 
@@ -115,9 +115,9 @@
             const api = apiWithPagination(URLS.CHARACTERS());
 
             const render = async () => {
-                playground.innerHTML = '';
-
                 const items = await api.call();
+
+                playground.innerHTML = '';
 
                 items.forEach((item) => {
                     playground.appendChild(generateCard(item));
