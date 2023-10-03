@@ -7,8 +7,33 @@
 
         </div>
 
+        <div class="controls">
+            <button id="next">next</button>
+            <button id="prev">prev</button>
+        </div>
+
+        <style>
+            #playground {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .wrapper {
+                padding: 1em;
+                margin: 0.5em;
+                box-shadow: 0 0 13px -10px;
+                border-radius: 10px;
+                max-width: 19em;
+            }
+
+
+        </style>
+
         <script>
             const playground = document.getElementById('playground');
+            const nextButton = document.getElementById('next');
+            const prevButton = document.getElementById('prev');
 
             const URLS = {
                 CHARACTER: (id) => `https://rickandmortyapi.com/api/character/${id}`,
@@ -39,14 +64,12 @@
                 const next = () => {
                     if (nextUrl) {
                         current = nextUrl;
-                        return call();
                     }
                 };
 
                 const prev = () => {
                     if (prevUrl) {
                         current = prevUrl;
-                        return call();
                     }
                 };
 
@@ -100,6 +123,15 @@
                     playground.appendChild(generateCard(item));
                 })
             };
+
+            nextButton.addEventListener('click', async () => {
+                api.next();
+                await render();
+            });
+            prevButton.addEventListener('click', async () => {
+                api.prev();
+                await render();
+            });
 
             render();
         </script>
