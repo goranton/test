@@ -1,230 +1,103 @@
-<!doctype html>
 <html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
+    <head>
+        <title>test api</title>
+    </head>
+    <body>
+        <div id="playground">
 
-<h1>Quiz 2</h1>
+        </div>
 
-<p>
-    ТЗ: Необходимо реализовать функционал добавление товара в корзину.
-</p>
+        <script>
+            const playground = document.getElementById('playground');
 
-<h1>Продукты</h1>
-<div id="products"></div>
+            const URLS = {
+                CHARACTER: (id) => `https://rickandmortyapi.com/api/character/${id}`,
+                CHARACTERS: () => 'https://rickandmortyapi.com/api/character',
+                LOCATIONS: () => 'https://rickandmortyapi.com/api/location',
+                EPISODES: () => 'https://rickandmortyapi.com/api/episode',
+            };
 
-<h1>Корзина</h1>
-<div id="basket"></div>
+            const apiWithPagination = (url) => {
+                let current = url;
 
-<style>
-    #products {
-        display: flex;
-    }
+                let count, pages, nextUrl, prevUrl = undefined;
 
-    .product {
-        min-width: 300px;
-        background: silver;
-        margin: 10px;
-        padding: 20px;
-    }
+                const call = async () => {
+                    const response = await fetch(url);
 
-    .product__head:before {
-        content: 'Название: ';
-        font-size: 15px;
-    }
+                    const {info, results} = await response.json();
 
-    .product__count:before {
-        content: 'Кол-во: ';
-    }
-</style>
+                    count = info.count;
+                    pages = info.pages;
 
+                    nextUrl = info.next;
+                    prevUrl = info.prev;
 
-<script type="text/javascript">
-    const products = [
-        {
-            id: 1,
-            name: 'Коробка',
-            count: 12,
-        },
-        {
-            id: 2,
-            name: 'Свеча',
-            count: 10,
-        },
-        {
-            id: 3,
-            name: 'Ведро',
-            count: 5,
-        }
-    ];
+                    return results;
+                };
 
-    const getBasket = () => {
-        try {
-            return JSON.parse(localStorage.getItem('basket')) ?? [];
-        } catch {
-            return [];
-        }
-    };
-
-    let basket = getBasket();
-
-    const productsPlacement = document.querySelector('#products');
-    const basketPlacement = document.querySelector('#basket');
-
-    function renderBasket() {
-        basketPlacement.innerHTML = '';
-
-        localStorage.setItem('basket', JSON.stringify(basket));
-
-        const groupById = basket.reduce((result, item) => {
-            if (result[item.id] === undefined) {
-                result[item.id] = item;
-                result[item.id].count = 1;
-            } else {
-                result[item.id].count++;
-            }
-
-            return result;
-        }, {});
-
-        Object.values(groupById).forEach((product) => {
-            const productElement = document.createElement('div');
-
-            productElement.dataset.id = product.id;
-            productElement.classList.add('product');
-
-            const productHead  = document.createElement('div');
-
-            productHead.classList.add('product__head');
-            productHead.innerHTML = product.name;
-
-
-            const productCount = document.createElement('div');
-
-            productCount.classList.add('product__count');
-            productCount.innerHTML = `${product.count}`;
-
-            const productButton = document.createElement('button');
-
-            const productCountInput = document.createElement('input');
-
-            productCountInput.setAttribute('type', 'number');
-            productCountInput.setAttribute('max', product.count);
-            productCountInput.setAttribute('min', 1);
-            productCountInput.classList.add('count');
-
-            productCountInput.value = 1;
-
-            productButton.innerHTML = 'Удалить из корзины';
-
-            productButton.addEventListener('click', () => {
-                const countInput = parseInt(productElement.querySelector('.count').value, 10);
-                let count = 0;
-
-                basket = basket.filter((item) => {
-                    if (count > countInput) {
-                        return true;
+                const next = () => {
+                    if (nextUrl) {
+                        current = nextUrl;
+                        return call();
                     }
+                };
 
-                    const result =  item.id !== product.id;
+                const prev = () => {
+                    if (prevUrl) {
+                        current = prevUrl;
+                        return call();
+                    }
+                };
 
-                    count++;
+                return { count, pages, next, prev, call };
+            };
 
-                    return result;
-                });
+            const generateCard = ({
+                name, status,
+                species, gender,
+                image
+            }) => {
+                const nameEl = document.createElement('div');
+                const statusEl = document.createElement('div');
+                const speciesEl = document.createElement('div');
+                const genderEl = document.createElement('div');
+                const imageEl = document.createElement('img');
 
-                renderBasket();
-                render();
-            }, {once: true})
+                nameEl.classList.add('name');
+                statusEl.classList.add('status');
+                speciesEl.classList.add('species');
+                genderEl.classList.add('gender');
+                imageEl.classList.add('image');
 
-            productElement.appendChild(productHead);
-            productElement.appendChild(productCount);
-            productElement.appendChild(productCountInput);
-            productElement.appendChild(productButton);
+                nameEl.innerHTML = name;
+                statusEl.innerHTML = status;
+                speciesEl.innerHTML = species;
+                genderEl.innerHTML = gender;
+                imageEl.setAttribute('src', image);
 
-            basketPlacement.appendChild(productElement);
-        });
-    }
+                const wrapper = document.createElement('div');
 
-    function render() {
-        productsPlacement.innerHTML = '';
+                wrapper.classList.add('wrapper');
 
-        products.forEach((product) => {
-            /** @type {number} */
-            const countInBasket = basket.reduce((acc, item) => {
-                if (item.id === product.id) {
-                    acc++;
-                }
+                wrapper.appendChild(nameEl);
+                wrapper.appendChild(statusEl);
+                wrapper.appendChild(speciesEl);
+                wrapper.appendChild(genderEl);
+                wrapper.appendChild(imageEl);
 
-                return acc;
-            }, 0);
+                return wrapper;
+            };
 
-            const productElement = document.createElement('div');
+            const api = apiWithPagination(URLS.CHARACTERS());
 
-            productElement.dataset.id = product.id;
-            productElement.classList.add('product');
+            const render = async () => {
+                playground.innerHTML = '';
 
-            const productHead  = document.createElement('div');
+                await api.call();
+            };
 
-            productHead.classList.add('product__head');
-            productHead.innerHTML = product.name;
-
-            const productCount = document.createElement('div');
-
-            productCount.classList.add('product__count');
-            productCount.innerHTML = `${product.count - countInBasket}`;
-
-            productElement.appendChild(productHead);
-            productElement.appendChild(productCount);
-
-            if(product.count - countInBasket > 0) {
-                const productInput = document.createElement('input');
-                const productButton = document.createElement('button');
-
-                productButton.innerHTML = 'Добавить в корзину';
-
-                productInput.setAttribute('type', 'number');
-                productInput.setAttribute('max', product.count - countInBasket);
-                productInput.setAttribute('min', 1);
-                productInput.classList.add('count');
-
-                productInput.value = 1;
-
-                productButton.addEventListener('click', () => {
-                    const countInput = parseInt(productElement.querySelector('.count').value, 10);
-
-                    const items = Array.from({length: countInput}).map(() => ({...product}));
-
-                    items.forEach((item) => {
-                        basket.push(item);
-                    });
-
-                    render();
-                    renderBasket();
-                }, {once: true});
-
-                productElement.appendChild(productInput);
-                productElement.appendChild(productButton);
-            } else {
-                const productText = document.createElement('div');
-
-                productText.innerHTML = 'Товар закончился';
-
-                productElement.appendChild(productText);
-            }
-
-            productsPlacement.appendChild(productElement);
-        });
-    }
-
-    render();
-    renderBasket();
-
-</script>
-</body>
+            render();
+        </script>
+    </body>
 </html>
